@@ -1,0 +1,167 @@
+# run :RestSelectEnv .env.json
+### Get all tasks
+
+GET {{HOST}}/api/tasks
+
+###
+GET {{HOST}}/api/tasks
+
+{%
+
+local body = context.json_decode(context.result.body)
+local firstTaskId = body[1].id
+local lastTaskId = body[#body].id
+local selectedTaskId = body[4].id
+
+context.set_env("selectedid", selectedTaskId)
+context.set_env("lastid", lastTaskId)
+context.set_env("firstid", firstTaskId)
+
+%}
+DELETE {{HOST}}/api/tasks/{{lastid}}
+### Get a single task
+
+GET {{HOST}}/api/tasks/{{selectedid}}
+
+{%
+
+local body = context.json_decode(context.result.body)
+
+context.set_env("selectedid", body.id)
+context.set_env("title", body.title)
+context.set_env("completed", tostring(body.completed))
+
+%}
+
+### Malformed request
+
+POST {{HOST}}/api/tasks
+content-type: application/json
+
+{
+  "title": "Maloformed Task request",
+}
+
+### Create a new invalid task (it works without schema validation)
+
+POST {{HOST}}/api/tasks
+content-type: application/json
+
+{
+  "title": "New Task without required completed field"
+}
+
+### Create a new invalid task (presence of non valid fields)
+
+POST {{HOST}}/api/tasks
+content-type: application/json
+
+{
+  "title": "New Task with invalid description field",
+  "completed": false,
+  "description": "There is no description"
+}
+
+### Create a new task with valid data
+
+POST {{HOST}}/api/tasks
+content-type: application/json
+
+{
+  "title": "New Task",
+  "completed": false
+}
+
+{%
+
+local body = context.json_decode(context.result.body)
+
+context.set_env("lastid", body.task.id)
+context.set_env("selectedid", body.task.id)
+
+%}
+### Update an existing task
+
+PUT {{HOST}}/api/tasks/{{lastid}}
+content-type: application/json
+
+{
+  "title": "New Task completed",
+  "completed": true
+}
+
+GET {{HOST}}/api/tasks/{{lastid}}
+
+### Patch an existing task
+
+PATCH {{HOST}}/api/tasks/{{lastid}}
+content-type: application/json
+
+{
+  "title": "New Task patched"
+}
+
+### Update a NON existing task with invalid data (it works like POST)
+
+PUT {{HOST}}/api/tasks/f712f1c0-cab0-11ee-a440-83012ec00f8c
+content-type: application/json
+
+{
+  "title": "Update a non Existing Task",
+  "completed": true,
+  "description": "Upsert Task Description"
+}
+
+### Update a NON existing task with invalid data 2 (again it works like POST)
+
+PUT {{HOST}}/api/tasks/f712f1c0-cab0-11ee-a440-83012ec00f8c
+content-type: application/json
+
+{
+  "title": "Update a non Existing Task"
+}
+
+### Update a NON existing task (it works like POST)
+
+PUT {{HOST}}/api/tasks/f712f1c0-cab0-11ee-a440-83012ec00f8c
+content-type: application/json
+
+{
+  "title": "Update a non Existing Task",
+  "completed": true
+}
+
+DELETE {{HOST}}/api/tasks/f712f1c0-cab0-11ee-a440-83012ec00f8c
+
+### Patch a non? existing task with invalid data
+
+PATCH {{HOST}}/api/tasks/f712f1c0-cab0-11ee-a440-83012ec00f8c
+content-type: application/json
+
+{
+  "description": "Upsert Task Description"
+}
+
+### Patch a non? existing task 
+
+PATCH {{HOST}}/api/tasks/f712f1c0-cab0-11ee-a440-83012ec00f8c
+content-type: application/json
+
+{
+  "title": "Patch a non Existing Task"
+}
+
+### Patch an existing? task
+
+PATCH {{HOST}}/api/tasks/{{lastid}}
+content-type: application/json
+
+{
+  "title": "Patch an Existing Task"
+}
+
+### Delete a task
+
+DELETE {{HOST}}/api/tasks/{{id}}
+DELETE {{HOST}}/api/tasks/{{lastid}}
+DELETE {{HOST}}/api/tasks/{{firstid}}
