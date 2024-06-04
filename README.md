@@ -10,12 +10,12 @@ This API uses:
 
 ## API Endpoints
 
-- `GET /api/todos`: Retrieve all todos.
-- `GET /api/todos/:id`: Fetch a specific todo by its unique ID.
-- `POST /api/todos`: Create a new todo.
-- `PUT /api/todos/:id`: Modify a specific todo by its ID.
-- `PATCH /api/todos/:id`: Modify a specific todo by its ID.
-- `DELETE /api/todos/:id`: Delete a specific todo by its ID.
+- `GET /api/vehicles`: Retrieve all vehicles.
+- `GET /api/vehicles/:id`: Fetch a specific vehicle by its unique ID.
+- `POST /api/vehicles`: Create a new vehicle.
+- `PUT /api/vehicles/:id`: Modify a specific vehicle by its ID.
+- `PATCH /api/vehicles/:id`: Modify a specific vehicle by its ID.
+- `DELETE /api/vehicles/:id`: Delete a specific vehicle by its ID.
 
 ## Authentication
 
